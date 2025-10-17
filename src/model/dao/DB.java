@@ -16,9 +16,9 @@ public class DB {
 	public static Connection getConnection() {
 		if (conn == null) {
 			try {
-				Properties props = loadProperties();
-				String url = props.getProperty("dburl");
-				conn = DriverManager.getConnection(url, props);
+				Properties prop = loadProperties();
+				String url = prop.getProperty("dburl");
+				conn = DriverManager.getConnection(url, prop);
 				return conn;
 			} catch (SQLException e) {
 				throw new DbException(e.getMessage());
@@ -30,13 +30,12 @@ public class DB {
 
 	public static Properties loadProperties() {
 		try (FileInputStream fr = new FileInputStream("db.properties")) {
-			Properties props = new Properties();
-			props.load(fr);
-			return props;
+			Properties prop = new Properties();
+			prop.load(fr);
+			return prop;
 		} catch (IOException e) {
 			throw new DbException(e.getMessage());
 		}
-
 	}
 	
 	public static void closeConection(Connection conn) {
