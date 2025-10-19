@@ -12,20 +12,18 @@ public class Book implements Serializable {
 	private String author;
 	private LocalDate releaseDate;
 	private Double price;
-	private Integer quantity;
 	private Integer id;
 
 	public Book() {
 
 	}
 
-	public Book(String title, String author, LocalDate releaseDate, Double price, Integer quantity, Integer id) {
+	public Book(String title, String author, LocalDate releaseDate, Double price, Integer id) {
 		super();
 		this.title = title;
 		this.author = author;
 		this.releaseDate = releaseDate;
 		this.price = price;
-		this.quantity = quantity;
 		this.id = id;
 	}
 
@@ -35,14 +33,6 @@ public class Book implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public Integer getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(Integer quantity) {
-		this.quantity = quantity;
 	}
 
 	public String getTitle() {
@@ -98,7 +88,7 @@ public class Book implements Serializable {
 	@Override
 	public String toString() {
 		return "Book [title=" + title + ", author=" + author + ", releaseDate=" + releaseDate + ", price=" + price
-				+ ", quantity=" + quantity + ", id=" + id + "]";
+				+ ", id=" + id + "]";
 	}
 
 }

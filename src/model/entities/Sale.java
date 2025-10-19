@@ -2,30 +2,28 @@ package model.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Sale implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    
     private Integer id;
     private LocalDate saleDate;
-    private Integer quantity;
     private Double totalPrice;
 
     private Customer customer;
-    private Book book;
+    private List<SaleItem> items = new ArrayList<>();
 
     public Sale() {
     }
 
-    public Sale(Integer id, LocalDate saleDate, Integer quantity, Double totalPrice, Customer customer, Book book) {
+    public Sale(Integer id, LocalDate saleDate, Customer customer) {
         this.id = id;
         this.saleDate = saleDate;
-        this.quantity = quantity;
-        this.totalPrice = totalPrice;
         this.customer = customer;
-        this.book = book;
     }
 
     public Integer getId() { return id; }
@@ -34,17 +32,27 @@ public class Sale implements Serializable {
     public LocalDate getSaleDate() { return saleDate; }
     public void setSaleDate(LocalDate saleDate) { this.saleDate = saleDate; }
 
-    public Integer getQuantity() { return quantity; }
-    public void setQuantity(Integer quantity) { this.quantity = quantity; }
-
-    public Double getTotalPrice() { return totalPrice; }
-    public void setTotalPrice(Double totalPrice) { this.totalPrice = totalPrice; }
+    public Double getTotalPrice() {
+        double sum = 0.0;
+        for (SaleItem item : items) {
+            sum += item.getSubTotal();
+        }
+        return sum;
+    }
 
     public Customer getCustomer() { return customer; }
     public void setCustomer(Customer customer) { this.customer = customer; }
 
-    public Book getBook() { return book; }
-    public void setBook(Book book) { this.book = book; }
+    public List<SaleItem> getItems() { return items; }
+
+
+    public void addItem(SaleItem item) {
+        items.add(item);
+    }
+
+    public void removeItem(SaleItem item) {
+        items.remove(item);
+    }
 
     @Override
     public int hashCode() {
@@ -63,11 +71,12 @@ public class Sale implements Serializable {
 
     @Override
     public String toString() {
-        return "Sale [id=" + id +
-               ", saleDate=" + saleDate +
-               ", quantity=" + quantity +
-               ", totalPrice=" + totalPrice +
-               ", customer=" + (customer != null ? customer.getName() : "N/A") +
-               ", book=" + (book != null ? book.getTitle() : "N/A") + "]";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Sale [id=" + id + ", date=" + saleDate + ", customer=" + customer.getName() + "]\n");
+        for (SaleItem item : items) {
+            sb.append(item.toString()).append("\n");
+        }
+        sb.append("Total: R$ ").append(String.format("%.2f", getTotalPrice()));
+        return sb.toString();
     }
 }
