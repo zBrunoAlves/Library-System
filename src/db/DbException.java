@@ -1,4 +1,4 @@
-package model.dao;
+package db;
 
 public class DbException extends RuntimeException {
 
