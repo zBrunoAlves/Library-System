@@ -10,7 +10,7 @@ public class Book implements Serializable {
 
 	private String title;
 	private String author;
-	private LocalDate releaseDate;
+	private LocalDate releaseYear;
 	private Double price;
 	private Integer id;
 
@@ -18,11 +18,11 @@ public class Book implements Serializable {
 
 	}
 
-	public Book(String title, String author, LocalDate releaseDate, Double price, Integer id) {
+	public Book(String title, String author, LocalDate releaseYear, Double price, Integer id) {
 		super();
 		this.title = title;
 		this.author = author;
-		this.releaseDate = releaseDate;
+		this.releaseYear = releaseYear;
 		this.price = price;
 		this.id = id;
 	}
@@ -51,12 +51,12 @@ public class Book implements Serializable {
 		this.author = author;
 	}
 
-	public LocalDate getReleaseDate() {
-		return releaseDate;
+	public LocalDate getreleaseYear() {
+		return releaseYear;
 	}
 
-	public void setReleaseDate(LocalDate releaseDate) {
-		this.releaseDate = releaseDate;
+	public void setreleaseYear(LocalDate releaseYear) {
+		this.releaseYear = releaseYear;
 	}
 
 	public Double getPrice() {
@@ -69,7 +69,7 @@ public class Book implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(author, price, releaseDate, title);
+		return Objects.hash(author, price, releaseYear, title);
 	}
 
 	@Override
@@ -82,12 +82,12 @@ public class Book implements Serializable {
 			return false;
 		Book other = (Book) obj;
 		return Objects.equals(author, other.author) && Objects.equals(price, other.price)
-				&& Objects.equals(releaseDate, other.releaseDate) && Objects.equals(title, other.title);
+				&& Objects.equals(releaseYear, other.releaseYear) && Objects.equals(title, other.title);
 	}
 
 	@Override
 	public String toString() {
-		return "Book [title=" + title + ", author=" + author + ", releaseDate=" + releaseDate + ", price=" + price
+		return "Book [title=" + title + ", author=" + author + ", releaseYear=" + releaseYear + ", price=" + price
 				+ ", id=" + id + "]";
 	}
 

@@ -26,6 +26,8 @@ public class Sale implements Serializable {
         this.customer = customer;
     }
 
+    public void setTotalPrice(Double totalPrice) {this.totalPrice = totalPrice;}
+    
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
@@ -76,7 +78,7 @@ public class Sale implements Serializable {
         for (SaleItem item : items) {
             sb.append(item.toString()).append("\n");
         }
-        sb.append("Total: R$ ").append(String.format("%.2f", getTotalPrice()));
+        sb.append("Total: R$ ").append(String.format("%.2f", totalPrice));
         return sb.toString();
     }
 }
