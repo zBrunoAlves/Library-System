@@ -21,7 +21,7 @@ public class DaoFactory {
 	}
 
 	public static SaleItemDao createSaleItemDao() {
-		return new SaleItemDaoJDBC();
+		return new SaleItemDaoJDBC(DB.getConnection());
 	}
 
 }

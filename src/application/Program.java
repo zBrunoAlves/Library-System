@@ -1,15 +1,15 @@
 package application;
 
 import model.dao.DaoFactory;
-import model.dao.SaleDao;
+import model.dao.SaleItemDao;
 
 public class Program {
 
 	public static void main(String[] args) {
 
-		SaleDao sale = DaoFactory.createSaleDao();
+		SaleItemDao saleItem = DaoFactory.createSaleItemDao();
 		
-		System.out.println(sale.findById(1));
+		System.out.println(saleItem.findById(1));
 		
 	}
 
