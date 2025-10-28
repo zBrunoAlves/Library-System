@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import db.DB;
@@ -67,8 +68,32 @@ public class BookDaoJDBC implements BookDao {
 
 	@Override
 	public List<Book> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement("SELECT * FROM library.book");
+			rs = st.executeQuery();
+			
+			List<Book> list = new ArrayList<Book>();
+			
+			while(rs.next()) {
+				Book obj = new Book();
+				obj.setId(rs.getInt("id"));
+				obj.setTitle(rs.getString("title"));
+				obj.setAuthor(rs.getString("author"));
+				obj.setreleaseYear(rs.getDate("release_year").toLocalDate());
+				obj.setPrice(rs.getDouble("price"));
+				
+				list.add(obj);
+			}
+			return list;
+		}catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(st);
+		}
 	}
 
 }

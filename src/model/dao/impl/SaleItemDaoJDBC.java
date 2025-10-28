@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import db.DB;
@@ -79,8 +80,39 @@ public class SaleItemDaoJDBC implements SaleItemDao {
 
 	@Override
 	public List<SaleItem> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		List<SaleItem> list = new ArrayList<SaleItem>();
+
+		try {
+			st = conn.prepareStatement(
+					"SELECT sale_item.* , book.title as title FROM sale_item INNER JOIN book on sale_item.book_id = book.id");
+
+			rs = st.executeQuery();
+
+			while (rs.next()) {
+				Book book = new Book();
+				book.setTitle(rs.getString("title"));
+
+				Sale sale = new Sale();
+				sale.setId(rs.getInt("sale_id"));
+
+				SaleItem obj = new SaleItem();
+				obj.setBook(book);
+				obj.setPrice(rs.getDouble("price"));
+				obj.setQuantity(rs.getInt("quantity"));
+
+				obj.setSale(sale);
+				list.add(obj);
+			}
+			return list;
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(st);
+		}
 	}
 
 }

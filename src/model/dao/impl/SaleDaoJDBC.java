@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import db.DB;
@@ -59,8 +60,7 @@ public class SaleDaoJDBC implements SaleDao {
 				obj.setSaleDate(rs.getDate("sale_date").toLocalDate());
 				obj.setTotalPrice(rs.getDouble("total_price"));
 				obj.setCustomer(customer);
-				
-				
+
 				return obj;
 			}
 		} catch (SQLException e) {
@@ -74,8 +74,33 @@ public class SaleDaoJDBC implements SaleDao {
 
 	@Override
 	public List<Sale> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		List<Sale> list = new ArrayList<Sale>();
+
+		try {
+			st = conn.prepareStatement(
+					"SELECT sale.* , customer.name as cliente FROM sale INNER join customer on sale.customer_id = customer.id");
+			rs = st.executeQuery();
+
+			while (rs.next()) {
+				Customer customer = new Customer();
+				customer.setName(rs.getString("cliente"));
+				Sale obj = new Sale();
+				obj.setCustomer(customer);
+				obj.setId(rs.getInt("id"));
+				obj.setSaleDate(rs.getDate("sale_date").toLocalDate());
+				obj.setTotalPrice(rs.getDouble("total_price"));
+
+				list.add(obj);
+			}
+			return list;
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(st);
+		}
 	}
 
 }
