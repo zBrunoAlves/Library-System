@@ -31,6 +31,21 @@ public class Program {
 		System.out.println("======================");
 		System.out.println("======================");
 		System.out.println(saleItem.findAll());
+		System.out.println("======================");
+		System.out.println("======================");
+		System.out.println("======================");
+		System.out.println("======================");
+		System.out.println("======================");
+		System.out.println("======================");
+		customer.deleteById(4);
+		customer.deleteById(3);
+		System.out.println("======================");
+		System.out.println("======================");
+		System.out.println("======================");
+		System.out.println("======================");
+		System.out.println("======================");
+		System.out.println("======================");
+		saleItem.deleteById(1);
 
 	}
 

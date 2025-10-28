@@ -15,7 +15,7 @@ import model.entities.Sale;
 
 public class SaleDaoJDBC implements SaleDao {
 
-	public static Connection conn;
+	public Connection conn;
 
 	public SaleDaoJDBC(Connection conn) {
 		this.conn = conn;
@@ -35,8 +35,21 @@ public class SaleDaoJDBC implements SaleDao {
 
 	@Override
 	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
+		String sql = "DELETE FROM sale WHERE id = ?";
 
+		try (PreparedStatement st = conn.prepareStatement(sql)) {
+
+			st.setInt(1, id);
+			int linhasAfetadas = st.executeUpdate();
+
+			if (linhasAfetadas == 0) {
+				throw new DbException("Nenhum registro encontrado com o ID informado: " + id);
+			}
+
+			System.out.println("Linhas afetadas: " + linhasAfetadas);
+		} catch (SQLException e) {
+			throw new DbException("Erro ao excluir registro: " + e.getMessage());
+		}
 	}
 
 	@Override

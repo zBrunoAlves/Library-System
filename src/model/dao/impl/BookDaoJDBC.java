@@ -9,12 +9,13 @@ import java.util.List;
 
 import db.DB;
 import db.DbException;
+import db.DbIntegrityException;
 import model.dao.BookDao;
 import model.entities.Book;
 
 public class BookDaoJDBC implements BookDao {
 
-	public static Connection conn;
+	public Connection conn;
 
 	public BookDaoJDBC(Connection conn) {
 		this.conn = conn;
@@ -34,8 +35,19 @@ public class BookDaoJDBC implements BookDao {
 
 	@Override
 	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement("DELETE FROM book WHERE id = ?");
+			st.setInt(1, id);
 
+			int rownsAffected = st.executeUpdate();
+
+			System.out.println("Done! Rows affected: " + rownsAffected);
+		} catch (SQLException e) {
+			throw new DbIntegrityException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+		}
 	}
 
 	@Override
@@ -46,21 +58,21 @@ public class BookDaoJDBC implements BookDao {
 			st = conn.prepareStatement("SELECT * FROM library.book WHERE Id = ?");
 			st.setInt(1, id);
 			rs = st.executeQuery();
-			
-			if(rs.next()) {
+
+			if (rs.next()) {
 				Book obj = new Book();
 				obj.setId(rs.getInt("id"));
 				obj.setTitle(rs.getString("title"));
 				obj.setAuthor(rs.getString("author"));
 				obj.setreleaseYear(rs.getDate("release_year").toLocalDate());
 				obj.setPrice(rs.getDouble("price"));
-				
+
 				return obj;
 			}
 			return null;
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
-		}finally {
+		} finally {
 			DB.closeResultSet(rs);
 			DB.closeStatement(st);
 		}
@@ -70,27 +82,27 @@ public class BookDaoJDBC implements BookDao {
 	public List<Book> findAll() {
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		
+
 		try {
 			st = conn.prepareStatement("SELECT * FROM library.book");
 			rs = st.executeQuery();
-			
+
 			List<Book> list = new ArrayList<Book>();
-			
-			while(rs.next()) {
+
+			while (rs.next()) {
 				Book obj = new Book();
 				obj.setId(rs.getInt("id"));
 				obj.setTitle(rs.getString("title"));
 				obj.setAuthor(rs.getString("author"));
 				obj.setreleaseYear(rs.getDate("release_year").toLocalDate());
 				obj.setPrice(rs.getDouble("price"));
-				
+
 				list.add(obj);
 			}
 			return list;
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
-		}finally {
+		} finally {
 			DB.closeResultSet(rs);
 			DB.closeStatement(st);
 		}

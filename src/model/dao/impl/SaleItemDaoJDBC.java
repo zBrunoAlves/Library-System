@@ -9,6 +9,7 @@ import java.util.List;
 
 import db.DB;
 import db.DbException;
+import db.DbIntegrityException;
 import model.dao.SaleItemDao;
 import model.entities.Book;
 import model.entities.Sale;
@@ -16,7 +17,7 @@ import model.entities.SaleItem;
 
 public class SaleItemDaoJDBC implements SaleItemDao {
 
-	private static Connection conn = null;
+	private Connection conn = null;
 
 	public SaleItemDaoJDBC(Connection conn) {
 		this.conn = conn;
@@ -30,14 +31,27 @@ public class SaleItemDaoJDBC implements SaleItemDao {
 
 	@Override
 	public void update(SaleItem obj) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
+		String sql = "DELETE FROM sale_item WHERE sale_id = ?";
 
+		try (PreparedStatement st = conn.prepareStatement(sql)) {
+
+			st.setInt(1, id);
+			int linhasAfetadas = st.executeUpdate();
+
+			if (linhasAfetadas == 0) {
+				throw new DbException("Nenhum registro encontrado com o ID informado: " + id);
+			}
+
+			System.out.println("Linhas afetadas: " + linhasAfetadas);
+
+		} catch (SQLException e) {
+			throw new DbIntegrityException("Erro ao excluir registro: " + e.getMessage());
+		}
 	}
 
 	@Override
