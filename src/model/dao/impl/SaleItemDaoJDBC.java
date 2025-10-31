@@ -25,13 +25,45 @@ public class SaleItemDaoJDBC implements SaleItemDao {
 
 	@Override
 	public void insert(SaleItem obj) {
-		// TODO Auto-generated method stub
+
+		String sql = "INSERT INTO sale_item (sale_id, book_id, quantity, price) VALUES (?, ?, ?, ?)";
+
+		try (PreparedStatement st = conn.prepareStatement(sql)) {
+
+			st.setInt(1, obj.getSale().getId());
+			st.setInt(2, obj.getBook().getId());
+			st.setInt(3, obj.getQuantity());
+			st.setDouble(4, obj.getPrice());
+
+			int rowsAffected = st.executeUpdate();
+
+			if (rowsAffected == 0) {
+				throw new DbException("Nenhuma linha foi inserida!");
+			}
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
 
 	}
 
 	@Override
 	public void update(SaleItem obj) {
 
+		String sql = "UPDATE sale_item SET sale_id = ?, book_id = ?, quantity = ?, price = ?";
+		
+		try(PreparedStatement st = conn.prepareStatement(sql)){
+			
+			st.setInt(1, obj.getSale().getId());
+			st.setInt(2, obj.getBook().getId());
+			st.setInt(3, obj.getQuantity());
+			st.setDouble(4, obj.getPrice());
+			
+		}catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		
+		
 	}
 
 	@Override

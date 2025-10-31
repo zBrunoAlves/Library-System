@@ -23,13 +23,51 @@ public class SaleDaoJDBC implements SaleDao {
 
 	@Override
 	public void insert(Sale obj) {
-		// TODO Auto-generated method stub
+
+		String sql = "INSERT INTO sale (sale_date, customer_id, total_price) VALUES (?, ?, ?)";
+
+		try (PreparedStatement st = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+
+			st.setDate(1, java.sql.Date.valueOf(obj.getSaleDate()));
+			st.setInt(2, obj.getCustomer().getId());
+			st.setDouble(3, obj.getTotalPrice());
+
+			int rowsAffected = st.executeUpdate();
+
+			if (rowsAffected > 0) {
+				try (ResultSet rs = st.getGeneratedKeys()) {
+					if (rs.next()) {
+						int id = rs.getInt(1);
+						obj.setId(id);
+					}
+				}
+			} else {
+				throw new DbException("Nenhuma linha foi inserida!");
+			}
+
+		} catch (SQLException e) {
+			throw new DbException("Erro ao inserir valores: " + e.getMessage());
+		}
 
 	}
 
 	@Override
 	public void update(Sale obj) {
-		// TODO Auto-generated method stub
+
+		String sql = "UPDATE sale SET sale_date = ?, customer_id = ?, total_price = ? WHERE id = ?";
+
+		try (PreparedStatement st = conn.prepareStatement(sql)) {
+
+			st.setDate(1, java.sql.Date.valueOf(obj.getSaleDate()));
+			st.setInt(2, obj.getCustomer().getId());
+			st.setDouble(3, obj.getTotalPrice());
+			st.setInt(4, obj.getId());
+
+			int rowsAffected = st.executeUpdate();
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
 
 	}
 

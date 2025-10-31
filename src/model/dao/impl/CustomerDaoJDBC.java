@@ -23,20 +23,38 @@ public class CustomerDaoJDBC implements CustomerDao {
 
 	@Override
 	public void insert(Customer obj) {
-		// TODO Auto-generated method stub
+
+		String sql = "INSERT INTO customer VALUES (?, ?, ?, ?, ?)";
+
+		try (PreparedStatement st = conn.prepareStatement(sql)) {
+
+			st.setInt(1, obj.getId());
+			st.setString(2, obj.getName());
+			st.setString(3, obj.getCpf());
+			st.setString(3, obj.getPhone());
+			st.setString(5, obj.getAndress());
+
+			int linhasAlteradas = st.executeUpdate();
+
+			System.out.println("Linhas alteradas: " + linhasAlteradas);
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
 
 	}
 
 	@Override
 	public void update(Customer obj) {
 
-		String sql = "UPDATE customer SET name = ?, phone = ?, anddress = ?";
+		String sql = "UPDATE customer SET name = ?, phone = ?, anddress = ? WHERE id = ?";
 
 		try (PreparedStatement st = conn.prepareStatement(sql)) {
 
 			st.setString(1, obj.getName());
 			st.setString(2, obj.getPhone());
 			st.setString(3, obj.getAndress());
+			st.setInt(4, obj.getId());
 
 			int linhasAfetadas = st.executeUpdate();
 

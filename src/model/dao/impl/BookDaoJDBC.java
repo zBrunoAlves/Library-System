@@ -23,14 +23,52 @@ public class BookDaoJDBC implements BookDao {
 
 	@Override
 	public void insert(Book obj) {
-		// TODO Auto-generated method stub
+	    String sql = "INSERT INTO book (title, author, price, release_year) VALUES (?, ?, ?, ?)";
 
+	    try (PreparedStatement st = conn.prepareStatement(sql)) {
+
+	        st.setString(1, obj.getTitle());
+	        st.setString(2, obj.getAuthor());
+	        st.setDouble(3, obj.getPrice());
+	        st.setInt(4, obj.getreleaseYear().getYear());
+
+	        int linhasInseridas = st.executeUpdate();
+
+	        if (linhasInseridas == 0) {
+	            throw new DbException("Erro ao inserir os dados — nenhuma linha afetada.");
+	        }
+
+	        System.out.println("Livro inserido com sucesso!");
+
+	    } catch (SQLException e) {
+	        throw new DbException("Erro ao inserir os dados: " + e.getMessage());
+	    }
 	}
+
 
 	@Override
 	public void update(Book obj) {
-		// TODO Auto-generated method stub
+		String sql = "UPDATE book SET title = ?, author = ?, price = ?, release_year = ? WHERE id = ?";
 
+		try (PreparedStatement st = conn.prepareStatement(sql)) {
+
+			st.setString(1, obj.getTitle());
+			st.setString(2, obj.getAuthor());
+			st.setDouble(3, obj.getPrice());
+			st.setInt(4, obj.getreleaseYear().getYear());
+			st.setInt(5, obj.getId());
+
+			int linhasAlteradas = st.executeUpdate();
+
+			if (linhasAlteradas == 0) {
+				throw new DbException("Nenhum registro encontrado com o ID informado: " + obj.getId());
+			}
+
+			System.out.println("Linhas atualizadas: " + linhasAlteradas);
+
+		} catch (SQLException e) {
+			throw new DbException("Erro ao atualizar informações: " + e.getMessage());
+		}
 	}
 
 	@Override
